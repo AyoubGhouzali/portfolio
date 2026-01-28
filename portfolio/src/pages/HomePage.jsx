@@ -8,8 +8,6 @@ import {
   Smartphone,
   Zap,
   ArrowRight,
-  Sparkles,
-  Loader2,
   Database,
   Cloud,
   Briefcase,
@@ -19,7 +17,6 @@ import {
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../utils/translations';
-import { callGemini } from '../utils/geminiApi';
 import { projectsData } from '../data/projectsData';
 import Preloader from '../components/Preloader';
 import ProjectCard from '../components/ProjectCard';
@@ -28,8 +25,54 @@ const HomePage = () => {
   const { language } = useLanguage();
   const t = translations[language];
   const [loading, setLoading] = useState(true);
+  const [contactName, setContactName] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
   const [contactMessage, setContactMessage] = useState("");
-  const [isPolishing, setIsPolishing] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null); // 'sending', 'success', 'error'
+
+  const handleContactSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitStatus('sending');
+
+    // EmailJS configuration
+    const SERVICE_ID = 'service_f6b0jlk';
+    const TEMPLATE_ID = 'template_cjffv9a';
+    const PUBLIC_KEY = '2JXxnYXulIE_bPDjrcQvG';
+
+    try {
+      const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          service_id: SERVICE_ID,
+          template_id: TEMPLATE_ID,
+          user_id: PUBLIC_KEY,
+          template_params: {
+            from_name: contactName,
+            from_email: contactEmail,
+            message: contactMessage,
+            to_email: 'ayoubghouzali04@gmail.com',
+          },
+        }),
+      });
+
+      if (response.ok) {
+        setSubmitStatus('success');
+        setContactName('');
+        setContactEmail('');
+        setContactMessage('');
+        setTimeout(() => setSubmitStatus(null), 5000);
+      } else {
+        setSubmitStatus('error');
+        setTimeout(() => setSubmitStatus(null), 5000);
+      }
+    } catch {
+      setSubmitStatus('error');
+      setTimeout(() => setSubmitStatus(null), 5000);
+    }
+  };
 
   // Refs for animation targets
   const preloaderRef = useRef(null);
@@ -41,9 +84,9 @@ const HomePage = () => {
 
   const skills = [
     { icon: <Code size={24} />, name: "Full-Stack", detail: "Spring Boot, React, Node" },
-    { icon: <Cloud size={24} />, name: "DevOps", detail: "Docker, K8s, AWS" },
-    { icon: <Zap size={24} />, name: "Automation", detail: "CI/CD, Terraform" },
-    { icon: <Database size={24} />, name: "Data", detail: "PostgreSQL, MongoDB" },
+    { icon: <Cloud size={24} />, name: "DevOps", detail: "Docker, K8s, AWS, CI/CD, Terraform" },
+    { icon: <Zap size={24} />, name: t.programmingLanguages, detail: "Python, R, Java, JS, SQL, C" },
+    { icon: <Database size={24} />, name: "Database", detail: "PostgreSQL, MongoDB" },
     { icon: <Cpu size={24} />, name: "ML/AI", detail: "TensorFlow, Scikit" },
     { icon: <Smartphone size={24} />, name: "Mobile", detail: "Flutter" },
   ];
@@ -215,26 +258,6 @@ const HomePage = () => {
     }
   };
 
-  const handlePolishMessage = async () => {
-    if (!contactMessage.trim() || isPolishing) return;
-
-    setIsPolishing(true);
-    const systemPrompt = language === 'en'
-      ? "You are an expert copywriter. Rewrite the following message to be more professional, concise, and persuasive, suitable for a business inquiry to a developer. Keep the tone polite but impactful."
-      : "Vous etes un expert en redaction. Reecrivez le message suivant pour qu'il soit plus professionnel, concis et persuasif, adapte a une demande commerciale pour un developpeur. Gardez un ton poli mais impactant.";
-
-    const promptText = language === 'en'
-      ? `Rewrite this message: "${contactMessage}"`
-      : `Reecris ce message: "${contactMessage}"`;
-
-    const polished = await callGemini(promptText, systemPrompt);
-
-    if (!polished.includes("Systems offline")) {
-      setContactMessage(polished.replace(/"/g, ''));
-    }
-    setIsPolishing(false);
-  };
-
   return (
     <>
       {/* Preloader */}
@@ -294,9 +317,6 @@ const HomePage = () => {
               <div className="w-full h-full rounded-full overflow-hidden border-4 border-black bg-gray-800">
                 <img src="/1762956420222.jpg" alt="Ayoub Profile" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 transform group-hover:scale-110" />
               </div>
-            </div>
-            <div className="absolute top-0 right-10 md:right-20 animate-spin-slow">
-              <div className="bg-black border border-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-mono text-orange-500">ENSIAS</div>
             </div>
           </div>
           <div className="space-y-8">
@@ -431,49 +451,67 @@ const HomePage = () => {
             <p className="text-gray-400">{t.contactSub}</p>
           </div>
 
-          <form className="space-y-6">
+          <form onSubmit={handleContactSubmit} className="space-y-6">
             <div className="grid md:grid-cols-2 gap-6">
               <div className="group">
                 <label className="block text-xs uppercase tracking-wider text-gray-500 mb-2 group-focus-within:text-orange-500 transition-colors">{t.nameLabel}</label>
-                <input type="text" className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-orange-500/50 focus:bg-white/10 transition-all" placeholder="John Doe" />
+                <input
+                  type="text"
+                  value={contactName}
+                  onChange={(e) => setContactName(e.target.value)}
+                  required
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-orange-500/50 focus:bg-white/10 transition-all"
+                  placeholder="John Doe"
+                />
               </div>
               <div className="group">
                 <label className="block text-xs uppercase tracking-wider text-gray-500 mb-2 group-focus-within:text-orange-500 transition-colors">{t.emailLabel}</label>
-                <input type="email" className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-orange-500/50 focus:bg-white/10 transition-all" placeholder="john@example.com" />
+                <input
+                  type="email"
+                  value={contactEmail}
+                  onChange={(e) => setContactEmail(e.target.value)}
+                  required
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-orange-500/50 focus:bg-white/10 transition-all"
+                  placeholder="john@example.com"
+                />
               </div>
             </div>
 
-            <div className="group relative">
-              <div className="flex justify-between items-center mb-2">
-                <label className="block text-xs uppercase tracking-wider text-gray-500 group-focus-within:text-orange-500 transition-colors">{t.messageLabel}</label>
-                <button
-                  type="button"
-                  onClick={handlePolishMessage}
-                  disabled={isPolishing || !contactMessage}
-                  className="flex items-center gap-1 text-[10px] uppercase font-bold text-orange-500 hover:text-white transition-colors disabled:opacity-50"
-                >
-                  {isPolishing ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
-                  {isPolishing ? t.optimizing : t.polishBtn}
-                </button>
-              </div>
+            <div className="group">
+              <label className="block text-xs uppercase tracking-wider text-gray-500 mb-2 group-focus-within:text-orange-500 transition-colors">{t.messageLabel}</label>
               <textarea
                 rows="4"
                 value={contactMessage}
                 onChange={(e) => setContactMessage(e.target.value)}
+                required
                 className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-orange-500/50 focus:bg-white/10 transition-all"
                 placeholder={t.messagePlaceholder}
               ></textarea>
-              <div className={`absolute -inset-[1px] bg-gradient-to-r from-orange-500 to-red-600 rounded-lg -z-10 opacity-0 transition-opacity duration-500 ${isPolishing ? 'opacity-50 blur-sm' : ''}`}></div>
             </div>
 
-            <button type="button" className="w-full py-4 bg-gradient-to-r from-orange-600 to-red-600 rounded-lg font-bold text-lg tracking-wide hover:shadow-[0_0_30px_rgba(249,115,22,0.4)] transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden group">
-              <span className="relative z-10">{t.sendBtn}</span>
+            <button
+              type="submit"
+              disabled={submitStatus === 'sending'}
+              className={`w-full py-4 rounded-lg font-bold text-lg tracking-wide transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden group ${
+                submitStatus === 'success'
+                  ? 'bg-green-600'
+                  : submitStatus === 'error'
+                  ? 'bg-red-600'
+                  : 'bg-gradient-to-r from-orange-600 to-red-600 hover:shadow-[0_0_30px_rgba(249,115,22,0.4)]'
+              } ${submitStatus === 'sending' ? 'opacity-70 cursor-not-allowed' : ''}`}
+            >
+              <span className="relative z-10">
+                {submitStatus === 'sending' && (language === 'en' ? 'Sending...' : 'Envoi...')}
+                {submitStatus === 'success' && (language === 'en' ? 'Message Sent!' : 'Message Envoyé!')}
+                {submitStatus === 'error' && (language === 'en' ? 'Error - Try Again' : 'Erreur - Réessayer')}
+                {!submitStatus && t.sendBtn}
+              </span>
               <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
             </button>
           </form>
 
           <div className="mt-12 flex justify-center space-x-8">
-            <a href="https://github.com" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white hover:scale-125 transition-all duration-300">
+            <a href="https://github.com/AyoubGhouzali" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white hover:scale-125 transition-all duration-300">
               <Github size={24} strokeWidth={1.5} />
             </a>
             <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white hover:scale-125 transition-all duration-300">

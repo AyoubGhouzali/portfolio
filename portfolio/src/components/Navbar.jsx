@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, Languages } from 'lucide-react';
-// Correction des chemins d'importation
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../utils/translations';
 
@@ -18,10 +17,8 @@ const Navbar = ({ loading = false }) => {
     e.preventDefault();
     setMenuOpen(false);
 
-    // Si on n'est pas sur la page d'accueil, on y va d'abord
     if (location.pathname !== '/') {
       navigate('/');
-      // Petit délai pour laisser le temps à la page de charger
       setTimeout(() => {
         const element = document.querySelector(id);
         if (element) {
@@ -32,7 +29,6 @@ const Navbar = ({ loading = false }) => {
         }
       }, 100);
     } else {
-      // Si on est déjà sur la page d'accueil, scroll direct
       const element = document.querySelector(id);
       if (element) {
         const headerOffset = 100;
@@ -70,9 +66,14 @@ const Navbar = ({ loading = false }) => {
                 </a>
               );
             })}
-            <button className="px-5 py-2 rounded-full border border-white/20 hover:bg-white hover:text-black transition-all duration-300 text-xs uppercase tracking-wider">
+            <a
+              href={t.files.resume}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-5 py-2 rounded-full border border-white/20 hover:bg-white hover:text-black transition-all duration-300 text-xs uppercase tracking-wider block text-center"
+            >
               {t.resume}
-            </button>
+            </a>
             <button
               onClick={toggleLanguage}
               className="flex items-center gap-1 text-xs font-bold text-orange-500 hover:text-white transition-colors"
@@ -102,6 +103,14 @@ const Navbar = ({ loading = false }) => {
             </a>
           );
         })}
+        <a
+          href={t.files.resume}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-2xl font-light tracking-tight hover:text-orange-500 transition-colors border border-white/20 px-8 py-3 rounded-full"
+        >
+          {t.resume}
+        </a>
         <button
           onClick={toggleLanguage}
           className="text-xl font-bold text-orange-500 flex items-center gap-2"

@@ -7,7 +7,7 @@ const Preloader = forwardRef(({ progressBarRef }, ref) => {
       className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black"
     >
       <div className="text-4xl md:text-6xl font-bold tracking-tighter mb-8 bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-red-600 animate-pulse">
-        AYOUB
+        AYOUB GHOUZALI
       </div>
       <div className="w-64 h-1 bg-gray-800 rounded-full overflow-hidden relative">
         <div

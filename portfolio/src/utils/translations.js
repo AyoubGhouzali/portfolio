@@ -2,12 +2,15 @@ export const translations = {
   en: {
     nav: ['About', 'Projects', 'Experience', 'Contact'],
     resume: 'Resume',
+    files: {
+      resume: '/en/resume.pdf'
+    },
     heroSub: 'Junior Full-Stack/DevOps Engineer',
     heroTitle: "Hi, I'm Ayoub",
     hireMe: 'Hire Me',
     quickJump: 'Quick Jump',
-    aboutTitle: 'Architecting',
-    aboutTitleHighlight: 'Cloud Solutions',
+    aboutTitle: 'Building',
+    aboutTitleHighlight: 'Digital Solutions',
     aboutDesc: "Software Engineering student at ENSIAS passionate about automation and Cloud. I combine a strong development background with operational skills. Currently looking for a 6-month internship as a DevOps Engineer.",
     projectsTitle: 'Selected Works',
     projectsSub: 'Swipe to explore the gallery',
@@ -33,17 +36,21 @@ export const translations = {
     viewLive: 'View Live',
     viewCode: 'View Code',
     gallery: 'Project Gallery',
-    present: 'Present'
+    present: 'Present',
+    programmingLanguages: 'Programming Languages'
   },
   fr: {
     nav: ['À propos', 'Projets', 'Expérience', 'Contact'],
     resume: 'CV',
+    files: {
+      resume: '/fr/cv.pdf'
+    },
     heroSub: 'Ingénieur Junior Full-Stack/DevOps',
     heroTitle: "Salut, c'est Ayoub",
     hireMe: 'Engagez-moi',
     quickJump: 'Accès Rapide',
-    aboutTitle: 'Architecture de',
-    aboutTitleHighlight: 'Solutions Cloud',
+    aboutTitle: 'Construire des',
+    aboutTitleHighlight: 'Solutions Digitales',
     aboutDesc: "Élève-ingénieur en Génie Logiciel à l'ENSIAS, passionné par l'automatisation et le Cloud. Je combine un solide background en développement avec des compétences opérationnelles. À la recherche d'un stage de 6 mois en tant qu'Ingénieur DevOps.",
     projectsTitle: 'Projets Sélectionnés',
     projectsSub: 'Glissez pour explorer la galerie',
@@ -69,6 +76,7 @@ export const translations = {
     viewLive: 'Voir en Direct',
     viewCode: 'Voir le Code',
     gallery: 'Galerie du Projet',
-    present: 'Présent'
+    present: 'Présent',
+    programmingLanguages: 'Langages de Programmation'
   }
 };
