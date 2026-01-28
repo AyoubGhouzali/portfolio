@@ -11,7 +11,11 @@ import {
   Sparkles,
   Loader2,
   Database,
-  Cloud
+  Cloud,
+  Briefcase,
+  GraduationCap,
+  Award,
+  Calendar
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../utils/translations';
@@ -42,6 +46,50 @@ const HomePage = () => {
     { icon: <Database size={24} />, name: "Data", detail: "PostgreSQL, MongoDB" },
     { icon: <Cpu size={24} />, name: "ML/AI", detail: "TensorFlow, Scikit" },
     { icon: <Smartphone size={24} />, name: "Mobile", detail: "Flutter" },
+  ];
+
+  const experiences = [
+    {
+      id: 1,
+      role: { en: "Software Engineering Intern", fr: "Stage en Génie Logiciel" },
+      company: "DTR",
+      date: { en: "June 2025 - Sept 2025", fr: "Juin 2025 - Sept 2025" },
+      desc: { 
+        en: "Developed internal web tools for research data management using Spring Boot and PostgreSQL.", 
+        fr: "Développement d'outils web internes pour la gestion de données de recherche avec Spring Boot et PostgreSQL." 
+      },
+      tech: ["Spring Boot", "PostgreSQL", "React"]
+    },
+    {
+      id: 2,
+      role: { en: "Data Analysis Intern", fr: "Stage en Analyse de Données" },
+      company: "CNRST",
+      date: { en: "June 2024 - July 2024", fr: "Juin 2024 - Juil 2024" },
+      desc: { 
+        en: "Analyzed 10,000+ HPC cluster logs using Python and R to optimize system performance.", 
+        fr: "Analyse de plus de 10 000 logs de cluster HPC avec Python et R pour l'optimisation des performances." 
+      },
+      tech: ["Python", "R", "HPC"]
+    }
+  ];
+
+  const education = [
+    {
+      id: 1,
+      type: "school",
+      title: { en: "Software Engineering", fr: "Génie Logiciel" },
+      institution: "ENSIAS",
+      date: { en: "Sept 2023 - Present", fr: "Sept 2023 - Présent" },
+      desc: { en: "National School of Computer Science and Systems Analysis.", fr: "École Nationale Supérieure d'Informatique et d'Analyse des Systèmes." }
+    },
+    {
+      id: 2,
+      type: "cert",
+      title: { en: "Introduction to Artificial Intelligence", fr: "Introduction à l'Intelligence Artificielle" },
+      institution: "IBM",
+      date: "2024",
+      desc: { en: "Fundamental concepts of AI, ML workflows, neural networks, and ethics.", fr: "Concepts fondamentaux de l'IA, workflows ML, réseaux de neurones et éthique." }
+    }
   ];
 
   const startMainAnimations = (gsap) => {
@@ -150,12 +198,10 @@ const HomePage = () => {
 
     return () => {
       clearTimeout(timer);
-      // Cleanup ScrollTrigger on unmount
       if (window.ScrollTrigger) {
         window.ScrollTrigger.getAll().forEach(trigger => trigger.kill());
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const scrollToSection = (e, id) => {
@@ -225,7 +271,7 @@ const HomePage = () => {
             <div className="flex items-center gap-4 text-xs font-medium text-gray-400 mt-4 animate-fade-in-up" style={{ animationDelay: '1.2s' }}>
               <span className="opacity-50">{t.quickJump}:</span>
               {t.nav.slice(0, 3).map((link, i) => (
-                <a key={link} href="#" onClick={(e) => scrollToSection(e, `#${['about', 'projects', 'contact'][i]}`)} className="hover:text-orange-500 transition-colors border-b border-transparent hover:border-orange-500 pb-0.5 cursor-pointer">
+                <a key={link} href="#" onClick={(e) => scrollToSection(e, `#${['about', 'projects', 'experience'][i]}`)} className="hover:text-orange-500 transition-colors border-b border-transparent hover:border-orange-500 pb-0.5 cursor-pointer">
                   {link}
                 </a>
               ))}
@@ -288,6 +334,89 @@ const HomePage = () => {
             {projectsData.map((project) => (
               <ProjectCard key={project.id} project={project} />
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Experience & Education Section */}
+      <section id="experience" className="py-24 px-6 max-w-7xl mx-auto reveal-section">
+        <div className="grid lg:grid-cols-2 gap-16">
+          {/* Experience */}
+          <div>
+            <div className="flex items-center gap-4 mb-8">
+              <div className="p-3 rounded-xl bg-orange-500/10 text-orange-500">
+                <Briefcase size={24} />
+              </div>
+              <h2 className="text-3xl font-bold tracking-tight">{t.experienceTitle}</h2>
+            </div>
+            
+            <div className="space-y-8 border-l-2 border-white/10 ml-4 pl-8 relative">
+              {experiences.map((exp) => (
+                <div key={exp.id} className="relative group">
+                  {/* Timeline Dot */}
+                  <div className="absolute -left-[39px] top-1 w-5 h-5 rounded-full border-4 border-[#050505] bg-gray-600 group-hover:bg-orange-500 transition-colors"></div>
+                  
+                  <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-orange-500/30 transition-all duration-300">
+                    <div className="flex flex-wrap justify-between items-start gap-2 mb-2">
+                      <h3 className="text-xl font-bold text-white">{exp.role[language]}</h3>
+                      <span className="text-xs font-mono px-2 py-1 rounded bg-white/10 text-gray-400 flex items-center gap-1">
+                        <Calendar size={12} /> {exp.date[language]}
+                      </span>
+                    </div>
+                    <div className="text-orange-500 font-medium mb-4">{exp.company}</div>
+                    <p className="text-gray-400 text-sm mb-4 leading-relaxed">
+                      {exp.desc[language]}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {exp.tech.map(tech => (
+                        <span key={tech} className="text-xs px-2 py-1 rounded bg-white/5 text-gray-500 border border-white/5">
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Education & Certifications */}
+          <div>
+            <div className="flex items-center gap-4 mb-8">
+              <div className="p-3 rounded-xl bg-orange-500/10 text-orange-500">
+                <GraduationCap size={24} />
+              </div>
+              <h2 className="text-3xl font-bold tracking-tight">{t.educationTitle}</h2>
+            </div>
+
+            <div className="space-y-6">
+              {education.map((edu) => (
+                <div key={edu.id} className="flex gap-4 p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all">
+                  <div className="mt-1">
+                    {edu.type === 'school' ? (
+                      <div className="w-10 h-10 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center">
+                        <GraduationCap size={20} />
+                      </div>
+                    ) : (
+                      <div className="w-10 h-10 rounded-full bg-yellow-500/20 text-yellow-400 flex items-center justify-center">
+                        <Award size={20} />
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-white mb-1">{edu.title[language]}</h3>
+                    <div className="flex items-center gap-2 text-sm text-gray-400 mb-2">
+                      <span className="text-white">{edu.institution}</span>
+                      <span>•</span>
+                      <span>{edu.date[language] || edu.date}</span>
+                    </div>
+                    <p className="text-sm text-gray-500">
+                      {edu.desc[language]}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
