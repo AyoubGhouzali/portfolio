@@ -176,23 +176,33 @@ const ProjectDetailPage = () => {
         {project.images && project.images.length > 1 && (
           <section>
             <h2 className="text-2xl font-bold mb-6">{t.gallery}</h2>
-            <div className="grid md:grid-cols-2 gap-4">
-              {project.images.map((img, idx) => (
-                <div key={idx} className="rounded-xl overflow-hidden bg-gray-900">
-                  <img
-                    src={img.src}
-                    alt={img.caption[language]}
-                    className="w-full h-48 object-cover"
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                      e.target.parentElement.innerHTML = `<div class="w-full h-48 flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800 text-gray-600 font-mono text-sm">${img.caption[language]}</div>`;
-                    }}
-                  />
-                  <p className="p-3 text-sm text-gray-400">
-                    {img.caption[language]}
-                  </p>
-                </div>
-              ))}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {project.images.map((img, idx) => {
+                const isArchitecture = img.src.includes('architecture');
+                return (
+                  <div
+                    key={idx}
+                    className={`rounded-xl overflow-hidden bg-gray-900 border border-white/10 ${
+                      isArchitecture ? 'md:col-span-2 lg:col-span-3' : ''
+                    }`}
+                  >
+                    <div className={isArchitecture ? '' : 'aspect-[9/16] bg-black flex items-center justify-center'}>
+                      <img
+                        src={img.src}
+                        alt={img.caption[language]}
+                        className={isArchitecture ? 'w-full' : 'w-full h-full object-contain'}
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.parentElement.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800 text-gray-600 font-mono text-sm">${img.caption[language]}</div>`;
+                        }}
+                      />
+                    </div>
+                    <p className="p-3 text-sm text-gray-400 text-center">
+                      {img.caption[language]}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
           </section>
         )}

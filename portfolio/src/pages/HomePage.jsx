@@ -97,11 +97,11 @@ const HomePage = () => {
       role: { en: "Software Engineering Intern", fr: "Stage en Génie Logiciel" },
       company: "DTR",
       date: { en: "June 2025 - Sept 2025", fr: "Juin 2025 - Sept 2025" },
-      desc: { 
-        en: "Developed internal web tools for research data management using Spring Boot and PostgreSQL.", 
-        fr: "Développement d'outils web internes pour la gestion de données de recherche avec Spring Boot et PostgreSQL." 
+      desc: {
+        en: "Built a humanitarian aid platform featuring a cross-platform Flutter mobile app with offline-first architecture, Mapbox geolocation for service discovery, multilingual support (Arabic, French, English), and a Next.js Admin Portal for NGOs to manage content dynamically via Supabase backend.",
+        fr: "Developpement d'une plateforme d'aide humanitaire avec une app mobile Flutter multiplateforme (architecture offline-first), geolocalisation Mapbox, support multilingue (arabe, francais, anglais), et un portail admin Next.js pour les ONG via backend Supabase."
       },
-      tech: ["Spring Boot", "PostgreSQL", "React"]
+      tech: ["Flutter", "Next.js", "Supabase", "Mapbox"]
     },
     {
       id: 2,
